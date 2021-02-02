@@ -1,0 +1,44 @@
+{
+  "name": "cloud.thesystem.at",
+  "version": "0.0.1-alpha.0",
+  "author": "TheSystemCollective",
+  "homepage": "https://cloud.thesystem.at",
+  "license": "AGPL-3.0",
+  "description": "thesystem.at cloud fileshare deployment pipeline",
+  "main": "src/index.mjs",
+  "private": true,
+  "engines": {
+    "node": ">=14.14.5"
+  },
+  "engineStrict": true,
+  "scripts": {
+    "start": "npm run dev",
+    "build": "docker-compose build -f ./docker/docker-compose.yml",
+    "dev": "docker-compose up -d",
+    "deploy": "bootstrap/deploy.sh"
+  },
+  "files": [
+    "src",
+    "dev"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thesystemcollective/cloud.thesystem.at.git"
+  },
+  "bugs": {
+    "url": "https://github.com/thesystemcollective/cloud.thesystem.at/issues"
+  },
+  "keywords": [
+    "grundstein",
+    "legung",
+    "server",
+    "deploy",
+    "artificialmuseum"
+  ],
+  "contributors": [
+    {
+      "name": "jascha ehrenreich",
+      "github": "jaeh"
+    }
+  ]
+}

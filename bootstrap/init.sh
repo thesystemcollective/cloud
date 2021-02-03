@@ -2,22 +2,33 @@
 
 set -euf -o pipefail
 
-printf "\033[1;33mTheSystemCloud\033[0m - installing dependencies.\n\n"
+printf "\033[1;33mTheSystemCloud\033[0m - installing dependencies - "
 
-apt update # >> /var/log/grundstein-install.log 2>&1
+apt update # >> /var/log/TheSystemCloud-install.log 2>&1
 
-apt upgrade # >> /var/log/grundstein-install.log 2>&1
+apt upgrade # >> /var/log/TheSystemCloud-install.log 2>&1
 
-apt install docker.io docker-compose git # >> /var/log/grundstein-install.log 2>&1
+apt install docker.io docker-compose git # >> /var/log/TheSystemCloud-install.log 2>&1
 
-printf "\033[1;33mTheSystemCloud\033[0m - cloning thesystemcollective/cloud.\n\n"
+printf "done \n\n"
 
-git clone git://github.com/thesystemcollective/cloud  # >> /var/log/grundstein-install.log 2>&1
+printf "\033[1;33mTheSystemCloud\033[0m - cloning thesystemcollective/cloud - "
+
+DIR="~/cloud"
+if [ ! -d "$DIR" ] ; then
+  git clone --depth 1 git://github.com/thesystemcollective/cloud $DIR # >> /var/log/TheSystemCloud-install.log 2>&1
+else
+  cd "$DIR"
+  git pull origin master # >> /var/log/TheSystemCloud-install.log 2>&1
+fi
+
 
 cd cloud
 
+printf "done \n\n"
+
 printf "\033[1;33mTheSystemCloud\033[0m - starting docker containers\n\n"
 
-docker-compose up -d
+docker-compose up -d # >> /var/log/TheSystemCloud-install.log 2>&1
 
 printf "\033[1;33mTheSystemCloud\033[0m - done.\n\n"

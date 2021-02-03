@@ -11,7 +11,7 @@ services:
       - MYSQL_ROOT_PASSWORD=235235
       - MYSQL_PASSWORD=235
     env_file:
-      - ./docker/db.env
+      - ~/.secrets/db.env
 
   app:
     build: ./docker/nextcloud
@@ -22,7 +22,7 @@ services:
       - MYSQL_HOST=db
       - MYSQL_PASSWORD=235
     env_file:
-      - ./docker/db.env
+      - ~/.secrets/db.env
     depends_on:
       - db
 

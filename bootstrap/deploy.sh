@@ -17,6 +17,6 @@ var_exists $IP \$IP
 
 echo "using ssh user: $USER and ip: $IP"
 
-scp .secrets/db.env $USER@$IP:~/db.env
+scp .secrets/db.env $USER@$IP:db.env
 
 ssh $USER@$IP bash -s < bootstrap/init.sh

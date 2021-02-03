@@ -8,21 +8,21 @@ apt update # >> /var/log/TheSystemCloud-install.log 2>&1
 
 apt upgrade # >> /var/log/TheSystemCloud-install.log 2>&1
 
-apt install docker.io docker-compose git # >> /var/log/TheSystemCloud-install.log 2>&1
+apt install docker.io docker-compose git certbot # >> /var/log/TheSystemCloud-install.log 2>&1
 
 printf "done \n\n"
 
 printf "\033[1;33mTheSystemCloud\033[0m - cloning thesystemcollective/cloud - "
 
-DIR="~/cloud"
-
-if [ ! -d "$DIR" ] ; then
-  git clone --depth 1 git://github.com/thesystemcollective/cloud $DIR # >> /var/log/TheSystemCloud-install.log 2>&1
-  cd "$DIR"
+if [ ! -d "cloud" ] ; then
+  git clone --depth 1 git://github.com/thesystemcollective/cloud # >> /var/log/TheSystemCloud-install.log 2>&1
+  cd "cloud"
 else
-  cd "$DIR"
+  cd "cloud"
   git pull origin master # >> /var/log/TheSystemCloud-install.log 2>&1
 fi
+
+
 
 printf "done \n\n"
 

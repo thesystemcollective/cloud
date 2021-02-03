@@ -15,7 +15,8 @@
     "start": "npm run dev",
     "build": "docker-compose build -f ./docker/docker-compose.yml",
     "dev": "docker-compose up -d",
-    "deploy": "bootstrap/deploy.sh"
+    "deploy": "bootstrap/deploy.sh",
+    "connect": "bin/connect.sh"
   },
   "files": [
     "src",

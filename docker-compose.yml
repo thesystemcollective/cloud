@@ -1,0 +1,98 @@
+version: '3'
+
+services:
+  db:
+    image: mariadb
+    command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=235235
+      - MYSQL_PASSWORD=235
+    env_file:
+      - ./docker/db.env
+
+  app:
+    build: ./docker/nextcloud
+    restart: always
+    volumes:
+      - ./data/nextcloud:/var/www/html
+    environment:
+      - MYSQL_HOST=db
+      - MYSQL_PASSWORD=235
+    env_file:
+      - ./docker/db.env
+    depends_on:
+      - db
+
+  web:
+    build: ./docker/web
+    restart: always
+    volumes:
+      - ./data/nextcloud:/var/www/html:ro
+    environment:
+      - VIRTUAL_HOST=localhost
+    depends_on:
+      - app
+    networks:
+      - proxy-tier
+      - default
+
+  collabora:
+    image: collabora/code
+    container_name: collabora
+    expose:
+      - 9980
+    cap_add:
+      - MKNOD
+    environment:
+      - domain=<cloud.domain.tld>
+      - VIRTUAL_HOST=<office.domain.tld>
+      - VIRTUAL_NETWORK=nginx-proxy
+      - VIRTUAL_PORT=9980
+      - VIRTUAL_PROTO=https
+      - LETSENCRYPT_HOST=<office.domain.tld>
+      - LETSENCRYPT_EMAIL=<admin@domain.tld>
+    networks:
+      - proxy-tier
+
+  proxy:
+    build: ./docker/proxy
+    restart: always
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./data/certs:/etc/nginx/certs:ro
+      - ./data/vhost.d:/etc/nginx/vhost.d
+      - ./data/html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    networks:
+      - proxy-tier
+    depends_on:
+      - omgwtfssl
+
+  omgwtfssl:
+    image: paulczar/omgwtfssl
+    restart: "no"
+    volumes:
+      - ./data/certs:/certs
+    environment:
+      - SSL_SUBJECT=servhostname.local
+      - CA_SUBJECT=my@example.com
+      - SSL_KEY=/certs/servhostname.local.key
+      - SSL_CSR=/certs/servhostname.local.csr
+      - SSL_CERT=/certs/servhostname.local.crt
+    networks:
+      - proxy-tier
+
+volumes:
+  db:
+  nextcloud:
+  certs:
+  vhost.d:
+  html:
+
+networks:
+  proxy-tier:

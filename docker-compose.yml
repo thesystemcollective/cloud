@@ -83,9 +83,12 @@ services:
   certbot:
     image: jrcs/letsencrypt-nginx-proxy-companion
     container_name: nginx-proxy-letsencrypt
-    volumes_from: 
-      - nginx-proxy
+    # volumes_from: 
+    #   - nginx-proxy
     volumes:
+      - ./data/certs:/etc/nginx/certs:ro
+      - ./data/vhost.d:/etc/nginx/vhost.d
+      - ./data/html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro \
       - /etc/acme.sh 
     environment:

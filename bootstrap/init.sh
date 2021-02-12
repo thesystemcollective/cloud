@@ -2,7 +2,7 @@
 
 set -euf -o pipefail
 
-printf "\033[1;33mTheSystemCloud\033[0m - installing dependencies - "
+printf "\033[1;33mTheSystemCloud\033[0m - installing dependencies"
 
 apt update # >> /var/log/TheSystemCloud-install.log 2>&1
 
@@ -10,7 +10,7 @@ apt upgrade # >> /var/log/TheSystemCloud-install.log 2>&1
 
 apt install docker.io docker-compose git certbot # >> /var/log/TheSystemCloud-install.log 2>&1
 
-printf "done \n\n"
+printf " - done \n\n"
 
 printf "\033[1;33mTheSystemCloud\033[0m - cloning thesystemcollective/cloud - "
 

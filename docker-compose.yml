@@ -88,7 +88,7 @@ services:
       - ./data/certs:/etc/nginx/certs:ro
       - ./data/vhost.d:/etc/nginx/vhost.d
       - ./data/html:/usr/share/nginx/html
-      - /var/run/docker.sock:/var/run/docker.sock:ro \
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/acme.sh 
     environment:
       - DEFAULT_EMAIL=thesystemcollective@gmail.com

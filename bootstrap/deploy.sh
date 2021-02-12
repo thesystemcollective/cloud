@@ -39,8 +39,8 @@ if [[ $@ == *"services"* ]]; then
   printf " - done\n\n"
 fi
 
-printf "\033[1;33mTheSystemCloud\033[0m - cleanup"
+# printf "\033[1;33mTheSystemCloud\033[0m - cleanup"
   
-ssh $USER@$IP rm -f db.env hetzner.ini
+# ssh $USER@$IP rm -f db.env hetzner.ini
 
-printf " - done\n\n"
+# printf " - done\n\n"

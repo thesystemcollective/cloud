@@ -1,4 +1,4 @@
-version: '3'
+version: '2'
 
 services:
   db:
@@ -49,7 +49,7 @@ services:
       - MKNOD
     environment:
       - LETSENCRYPT_HOST=office.thesystem.at
-      - domain=office.thesystem.at
+      - domain=cloud.thesystem.at
       - VIRTUAL_HOST=office.thesystem.at
       - VIRTUAL_NETWORK=nginx-proxy
       - VIRTUAL_PORT=9980
@@ -66,29 +66,23 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./data/certs:/etc/nginx/certs:ro
+      - ./data/certs:/etc/nginx/certs
       - ./data/vhost.d:/etc/nginx/vhost.d
       - ./data/html:/usr/share/nginx/html
       - /var/run/docker.sock:/tmp/docker.sock:ro    
     networks:
       - proxy-tier
-    # depends_on:
-    #   - nginx-proxy-letsencrypt
 
   certbot:
     image: jrcs/letsencrypt-nginx-proxy-companion
     container_name: nginx-proxy-letsencrypt
-    # volumes_from: 
-    #   - nginx-proxy
+    volumes_from: 
+      - proxy
     volumes:
-      - ./data/certs:/etc/nginx/certs:ro
-      - ./data/vhost.d:/etc/nginx/vhost.d
-      - ./data/html:/usr/share/nginx/html
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - /etc/acme.sh 
     environment:
       - DEFAULT_EMAIL=thesystemcollective@gmail.com
-      - NGINX_PROXY_CONTAINER=nginx-proxy
 
 volumes:
   db:

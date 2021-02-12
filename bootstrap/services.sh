@@ -2,7 +2,7 @@
 
 set -euf -o pipefail
 
-printf "\033[1;33mTheSystemCloud\033[0m - cloning thesystemcollective/cloud - "
+printf "\033[1;33mTheSystemCloud\033[0m - cloning thesystemcollective/cloud\n"
 
 cd ~
 
@@ -14,10 +14,10 @@ else
   git pull origin master # >> /var/log/TheSystemCloud-install.log 2>&1
 fi
 
-printf "done \n\n"
+printf "cloned thesystemcollective/cloud - done\n\n"
 
-printf "\033[1;33mTheSystemCloud\033[0m - starting docker containers\n\n"
+printf "\033[1;33mTheSystemCloud\033[0m - starting docker containers\n"
 
 docker-compose up -d # >> /var/log/TheSystemCloud-install.log 2>&1
 
-printf "\033[1;33mTheSystemCloud\033[0m - done.\n\n"
+printf "started docker containers - done.\n\n"

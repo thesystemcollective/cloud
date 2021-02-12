@@ -88,6 +88,7 @@ services:
       - /etc/acme.sh 
     environment:
       - DEFAULT_EMAIL=thesystemcollective@gmail.com
+      - NGINX_PROXY_CONTAINER=nginx-proxy
 
 volumes:
   db:

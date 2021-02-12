@@ -52,7 +52,6 @@ services:
     cap_add:
       - MKNOD
     environment:
-      - VIRTUAL_HOST=office.thesystem.at
       - LETSENCRYPT_HOST=office.thesystem.at
       - domain=office.thesystem.at
       - VIRTUAL_HOST=office.thesystem.at

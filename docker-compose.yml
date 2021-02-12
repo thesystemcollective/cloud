@@ -3,6 +3,7 @@ version: '3'
 services:
   db:
     image: mariadb
+    container_name: mariadb
     command: --transaction-isolation=READ-COMMITTED --binlog-format=ROW
     restart: always
     volumes:
@@ -15,6 +16,7 @@ services:
 
   app:
     build: ./docker/nextcloud
+    container_name: nextcloud
     restart: always
     volumes:
       - ./data/nextcloud:/var/www/html
@@ -28,11 +30,14 @@ services:
 
   web:
     build: ./docker/web
+    container_name: nginx
     restart: always
     volumes:
       - ./data/nextcloud:/var/www/html:ro
     environment:
       - VIRTUAL_HOST=cloud.thesystem.at
+      - LETSENCRYPT_HOST=cloud.thesystem.at
+      - LETSENCRYPT_EMAIL=thesystemcollective@gmail.com
     depends_on:
       - app
     networks:
@@ -47,18 +52,20 @@ services:
     cap_add:
       - MKNOD
     environment:
-      - domain=cloud.thesystem.at
+      - VIRTUAL_HOST=office.thesystem.at
+      - LETSENCRYPT_HOST=office.thesystem.at
+      - domain=office.thesystem.at
       - VIRTUAL_HOST=office.thesystem.at
       - VIRTUAL_NETWORK=nginx-proxy
       - VIRTUAL_PORT=9980
       - VIRTUAL_PROTO=https
-      - LETSENCRYPT_HOST=office.thesystem.at
       - LETSENCRYPT_EMAIL=thesystemcollective@gmail.com
     networks:
       - proxy-tier
 
   proxy:
     build: ./docker/proxy
+    container_name: nginx-proxy
     restart: always
     ports:
       - 80:80
@@ -67,25 +74,21 @@ services:
       - ./data/certs:/etc/nginx/certs:ro
       - ./data/vhost.d:/etc/nginx/vhost.d
       - ./data/html:/usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro    
     networks:
       - proxy-tier
-    depends_on:
-      - omgwtfssl
+    # depends_on:
+    #   - nginx-proxy-letsencrypt
 
-  omgwtfssl:
-    image: paulczar/omgwtfssl
-    restart: "no"
+  certbot:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: nginx-proxy-letsencrypt
+    volumes_from: nginx-proxy
     volumes:
-      - ./data/certs:/certs
+      - /var/run/docker.sock:/var/run/docker.sock:ro \
+      - /etc/acme.sh 
     environment:
-      - SSL_SUBJECT=cloud.thesystem.at
-      - CA_SUBJECT=thesystemcollective@gmail.com
-      - SSL_KEY=/certs/cloud.thesystem.at.key
-      - SSL_CSR=/certs/cloud.thesystem.at.csr
-      - SSL_CERT=/certs/cloud.thesystem.at.crt
-    networks:
-      - proxy-tier
+      - DEFAULT_EMAIL=thesystemcollective@gmail.com
 
 volumes:
   db:
